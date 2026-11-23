@@ -1,0 +1,53 @@
+<svg width="400" height="500" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="maroonBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#4A1025"/>
+      <stop offset="100%" stopColor="#2A0815"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#FFF8EB"/>
+      <stop offset="40%" stopColor="#E5D1A0"/>
+      <stop offset="70%" stopColor="#C5A15A"/>
+      <stop offset="100%" stopColor="#8C6D2D"/>
+    </linearGradient>
+    <radialGradient id="innerGlow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stopColor="#C5A15A" stop-opacity="0.25"/>
+      <stop offset="100%" stopColor="#C5A15A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Arch -->
+  <path d="M 40 460 V 160 C 40 70, 200 30, 200 30 C 200 30, 360 70, 360 160 V 460 Z" fill="url(#maroonBg)" stroke="url(#gold)" stroke-width="2.5"/>
+  <path d="M 52 450 V 168 C 52 85, 200 48, 200 48 C 200 48, 348 85, 348 168 V 450 Z" fill="none" stroke="url(#gold)" stroke-width="1" stroke-dasharray="4 3" opacity="0.6"/>
+
+  <circle cx="200" cy="200" r="140" fill="url(#innerGlow)"/>
+
+  <!-- Groom Sherwani Silhouette & Royal Turban Outline -->
+  <g transform="translate(100, 110)">
+    <!-- Turban (Safa) with Kalgi/Sarpech -->
+    <path d="M 70 85 C 60 55, 140 55, 130 85 C 150 95, 140 120, 100 122 C 60 120, 50 95, 70 85 Z" fill="#641C32" stroke="url(#gold)" stroke-width="2"/>
+    <!-- Sarpech Feather Ornament -->
+    <path d="M 100 55 Q 106 35 118 25 Q 112 40 102 55 Z" fill="url(#gold)"/>
+    <circle cx="100" cy="55" r="4" fill="#FFF8EB"/>
+
+    <!-- Face Silhouette Profile -->
+    <circle cx="100" cy="115" r="32" fill="#F5EBD8" opacity="0.95"/>
+    
+    <!-- Royal Sherwani Collar & Torso -->
+    <path d="M 60 150 L 85 142 L 100 155 L 115 142 L 140 150 L 165 240 L 35 240 Z" fill="#4A1025" stroke="url(#gold)" stroke-width="2"/>
+    <!-- Button placket & Golden Embroidery -->
+    <line x1="100" y1="155" x2="100" y2="240" stroke="url(#gold)" stroke-width="3"/>
+    <circle cx="100" cy="170" r="3" fill="url(#gold)"/>
+    <circle cx="100" cy="190" r="3" fill="url(#gold)"/>
+    <circle cx="100" cy="210" r="3" fill="url(#gold)"/>
+    <circle cx="100" cy="230" r="3" fill="url(#gold)"/>
+
+    <!-- Royal Stole / Dupatta -->
+    <path d="M 60 150 Q 80 210 70 240" stroke="url(#gold)" stroke-width="2" fill="none"/>
+  </g>
+
+  <!-- Name Label Plate -->
+  <rect x="60" y="380" width="280" height="60" rx="8" fill="#2A0815" stroke="url(#gold)" stroke-width="1.5"/>
+  <text x="200" y="405" text-anchor="middle" font-family="'Cinzel', serif" font-size="16" font-weight="700" fill="url(#gold)" letter-spacing="2">MOHAMMAD FAIZAN</text>
+  <text x="200" y="425" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="13" font-style="italic" fill="#E5D1A0">MCA • Groom</text>
+</svg>

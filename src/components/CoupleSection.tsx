@@ -1,9 +1,13 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { GoldDivider, CornerFiligree, DecorativePhotoPlaceholder } from './Ornaments';
-import { WEDDING_DATA } from '@/lib/constants';
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  GoldDivider,
+  CornerFiligree,
+  DecorativePhotoPlaceholder,
+} from "./Ornaments";
+import { WEDDING_DATA } from "@/lib/constants";
 
 export const CoupleSection: React.FC = () => {
   const { groom, bride } = WEDDING_DATA.couple;
@@ -29,7 +33,8 @@ export const CoupleSection: React.FC = () => {
             The Happy Couple
           </h2>
           <p className="font-cormorant italic text-base sm:text-lg text-[#3B2525]/80 max-w-lg mx-auto">
-            Two souls united with the blessings of Almighty Allah, embarking on a sacred journey of faith, love, and companionship.
+            Two souls united with the blessings of Almighty Allah, embarking on
+            a sacred journey of faith, love, and companionship.
           </p>
           <GoldDivider className="max-w-xs mx-auto my-3" />
         </motion.div>
@@ -46,15 +51,23 @@ export const CoupleSection: React.FC = () => {
           >
             <div className="relative rounded-2xl border-2 border-[#C5A15A] bg-[#FFFDF9] p-2.5 shadow-card-luxury">
               <div className="relative rounded-xl border border-[#C5A15A]/60 bg-[#FFFDF9] p-5 sm:p-6 text-center">
-                <CornerFiligree position="top-left" size={28} className="top-1 left-1 opacity-70" />
-                <CornerFiligree position="top-right" size={28} className="top-1 right-1 opacity-70" />
+                <CornerFiligree
+                  position="top-left"
+                  size={28}
+                  className="top-1 left-1 opacity-70"
+                />
+                <CornerFiligree
+                  position="top-right"
+                  size={28}
+                  className="top-1 right-1 opacity-70"
+                />
 
                 {/* Decorative Arched Placeholder */}
                 <div className="mb-4">
                   <DecorativePhotoPlaceholder
                     initials="MF"
                     arabicName={groom.arabicName}
-                    name={groom.name}
+                    // name={groom.name}
                     role="Groom"
                   />
                 </div>
@@ -63,9 +76,17 @@ export const CoupleSection: React.FC = () => {
                 <h3 className="font-playfair text-xl sm:text-2xl font-bold text-[#641C32] tracking-wide">
                   {groom.name}
                 </h3>
-                <div className="inline-block px-3 py-1 mt-1.5 rounded-full bg-[#641C32]/10 border border-[#C5A15A]/40 text-[#641C32] text-xs font-lato font-bold tracking-wider uppercase">
-                  {groom.qualification}
+                {/* Badges: Qualification & Designation */}
+                <div className="flex flex-wrap items-center justify-center gap-1.5 mt-2">
+                  <span className="inline-block px-3 py-1 rounded-full bg-[#641C32]/10 border border-[#C5A15A]/40 text-[#641C32] text-xs font-lato font-bold tracking-wider uppercase">
+                    {groom.qualification}
+                  </span>
                 </div>
+
+                <p className="font-cormorant text-md text-[#641C32] font-bold mt-1">
+                  {groom.designation}
+                </p>
+
                 <p className="font-cormorant italic text-sm text-[#3B2525]/75 mt-2.5">
                   {groom.description}
                 </p>
@@ -94,15 +115,23 @@ export const CoupleSection: React.FC = () => {
           >
             <div className="relative rounded-2xl border-2 border-[#C5A15A] bg-[#FFFDF9] p-2.5 shadow-card-luxury">
               <div className="relative rounded-xl border border-[#C5A15A]/60 bg-[#FFFDF9] p-5 sm:p-6 text-center">
-                <CornerFiligree position="top-left" size={28} className="top-1 left-1 opacity-70" />
-                <CornerFiligree position="top-right" size={28} className="top-1 right-1 opacity-70" />
+                <CornerFiligree
+                  position="top-left"
+                  size={28}
+                  className="top-1 left-1 opacity-70"
+                />
+                <CornerFiligree
+                  position="top-right"
+                  size={28}
+                  className="top-1 right-1 opacity-70"
+                />
 
                 {/* Decorative Arched Placeholder */}
                 <div className="mb-4">
                   <DecorativePhotoPlaceholder
                     initials="M"
                     arabicName={bride.arabicName}
-                    name={bride.name}
+                    // name={bride.name}
                     role="Bride"
                   />
                 </div>
@@ -111,9 +140,16 @@ export const CoupleSection: React.FC = () => {
                 <h3 className="font-playfair text-xl sm:text-2xl font-bold text-[#641C32] tracking-wide">
                   {bride.name}
                 </h3>
-                <div className="inline-block px-3 py-1 mt-1.5 rounded-full bg-[#641C32]/10 border border-[#C5A15A]/40 text-[#641C32] text-xs font-lato font-bold tracking-wider uppercase">
-                  {bride.qualification}
+                {/* Badges: Qualification & Designation */}
+                <div className="flex flex-wrap items-center justify-center gap-1.5 mt-2">
+                  <span className="inline-block px-3 py-1 rounded-full bg-[#641C32]/10 border border-[#C5A15A]/40 text-[#641C32] text-xs font-lato font-bold tracking-wider uppercase">
+                    {bride.qualification}
+                  </span>
+                 
                 </div>
+                <p className="font-cormorant text-md text-[#641C32] font-bold mt-1">
+                  {bride.designation}
+                </p>
                 <p className="font-cormorant italic text-sm text-[#3B2525]/75 mt-2.5">
                   {bride.description}
                 </p>

@@ -1,115 +1,234 @@
 /**
- * Spiritual Ambient Audio Synthesizer (Web Audio API)
- * Plays gentle, meditative, ethereal Islamic wedding ambience chords (oud/harp/ambient pad harmonics)
- * Never auto-plays; strictly activated after user interaction.
- * Clean, lightweight, zero dependencies, works 100% offline with zero 404 errors.
+ * Premium Islamic Wedding Audio Engine
+ * Default Track: "Shukran Laka Rabbi" by Sayyid Sufiyan
+ * Automatically plays on page load without requiring any click.
+ * Handles browser autoplay policies seamlessly:
+ *   - Attempts immediate unmuted playback.
+ *   - If the browser enforces cold-load interaction policy, smoothly starts on
+ *     the first passive movement, scroll, or touch (no button click required).
  */
 
+export interface IslamicTrack {
+  id: string;
+  title: string;
+  artist: string;
+  arabicTitle: string;
+  description: string;
+  src: string;
+}
+
+export const ISLAMIC_TRACKS: IslamicTrack[] = [
+  {
+    id: 'shukran-laka-rabbi',
+    title: 'Shukran Laka Rabbi',
+    artist: 'Sayyid Sufiyan',
+    arabicTitle: 'شُكْراً لَكَ رَبِّي',
+    description: 'Heartfelt prayer of gratitude to Allah for this blessed union',
+    src: '/music/shukran-laka-rabbi.mp3',
+  },
+  {
+    id: 'the-beauty-of-existence',
+    title: 'The Beauty of Existence',
+    artist: 'Noor Al Qalb',
+    arabicTitle: 'جَمَالُ الْوُجُود',
+    description: 'Soulful, ethereal nasheed on divine love & the beauty of existence',
+    src: '/music/the-beauty-of-existence.mp3',
+  },
+  {
+    id: 'barakallahu-lakuma',
+    title: 'Barakallahu Lakuma',
+    artist: 'Maher Zain',
+    arabicTitle: 'بَارَكَ اللَّهُ لَكُمَا',
+    description: 'Celebrated Sunnah wedding blessing nasheed',
+    src: '/music/barakallahu-lakuma.mp3',
+  },
+];
+
+export interface AudioState {
+  isPlaying: boolean;
+  isMuted: boolean;
+  currentTrack: IslamicTrack;
+  volume: number;
+}
+
+type AudioListener = (state: AudioState) => void;
+
 class AmbientSoundManager {
-  private audioCtx: AudioContext | null = null;
   private isPlaying = false;
   private isMuted = false;
-  private gainNode: GainNode | null = null;
-  private timer: number | null = null;
+  private volume = 0.55;
   private customAudio: HTMLAudioElement | null = null;
-
-  // Soothing traditional Maqam Bayati / Hijaz / Pentatonic ambient frequencies (C4, E4, G4, A4, B4, C5, E5, G5)
-  private scale = [261.63, 293.66, 329.63, 392.00, 440.00, 493.88, 523.25, 659.25, 783.99];
+  private currentTrack: IslamicTrack = ISLAMIC_TRACKS[0]; // Default: Shukran Laka Rabbi
+  private listeners: Set<AudioListener> = new Set();
+  private isInitialized = false;
+  private autoPlayAttempted = false;
 
   public init() {
+    if (typeof window === 'undefined' || this.isInitialized) return;
+    this.isInitialized = true;
+    this.setupAudioElement(this.currentTrack);
+    this.autoPlayImmediately();
+  }
+
+  private setupAudioElement(track: IslamicTrack) {
     if (typeof window === 'undefined') return;
 
-    // Check if an mp3 file is provided in public/music/wedding-ambience.mp3
-    try {
-      const audio = new Audio('/music/wedding-ambience.mp3');
+    if (!this.customAudio) {
+      const audio = new Audio();
       audio.loop = true;
-      audio.volume = 0.45;
+      audio.preload = 'auto';
+      audio.volume = this.volume;
+      audio.muted = this.isMuted;
+
       audio.addEventListener('error', () => {
-        // Fall back to Web Audio synth silently
-        this.customAudio = null;
+        const err = audio.error;
+        // Code 1 is MEDIA_ERR_ABORTED - triggered when a request is paused or interrupted by navigation. Ignore it.
+        if (err && err.code !== 1) {
+          console.warn('Audio playback notice:', err.message || err.code);
+        }
       });
+
       this.customAudio = audio;
-    } catch {
-      this.customAudio = null;
+    }
+
+    if (this.customAudio.src !== window.location.origin + track.src && !this.customAudio.src.endsWith(track.src)) {
+      this.customAudio.src = track.src;
+      this.customAudio.load();
     }
   }
 
-  private startSynthesizer() {
-    if (typeof window === 'undefined') return;
-    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
+  /**
+   * Attempts immediate unmuted playback without any user click.
+   * Strategy:
+   *  1. Try unmuted play directly — works on most return visitors / mobile.
+   *  2. If browser policy blocks it (NotAllowedError), silently start muted
+   *     so the audio stream is buffered & ready, then unmute automatically
+   *     on the very first passive gesture (mousemove, scroll, touchstart, etc.)
+   *     with NO click required.
+   */
+  private autoPlayImmediately() {
+    if (!this.customAudio || this.autoPlayAttempted) return;
+    this.autoPlayAttempted = true;
 
-    if (!this.audioCtx) {
-      this.audioCtx = new AudioContextClass();
-    }
-
-    if (this.audioCtx.state === 'suspended') {
-      this.audioCtx.resume();
-    }
-
-    this.gainNode = this.audioCtx.createGain();
-    this.gainNode.gain.setValueAtTime(this.isMuted ? 0 : 0.08, this.audioCtx.currentTime);
-    this.gainNode.connect(this.audioCtx.destination);
-
-    // Play meditative soft bell/pad progression
-    const playNote = () => {
-      if (!this.audioCtx || !this.gainNode || !this.isPlaying) return;
-
-      const osc = this.audioCtx.createOscillator();
-      const noteGain = this.audioCtx.createGain();
-
-      // Alternate between warm sine and soft triangle for flute/harp warmth
-      osc.type = Math.random() > 0.4 ? 'sine' : 'triangle';
-      const freq = this.scale[Math.floor(Math.random() * this.scale.length)];
-      osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
-
-      const now = this.audioCtx.currentTime;
-      const duration = 4.0 + Math.random() * 3.0; // Slow, serene decay
-
-      noteGain.gain.setValueAtTime(0.001, now);
-      noteGain.gain.exponentialRampToValueAtTime(0.2, now + 1.2);
-      noteGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-      osc.connect(noteGain);
-      noteGain.connect(this.gainNode);
-
-      osc.start(now);
-      osc.stop(now + duration + 0.1);
-
-      // Schedule next gentle note
-      const nextTime = (1200 + Math.random() * 1800);
-      this.timer = window.setTimeout(playNote, nextTime);
-    };
-
-    playNote();
-  }
-
-  public play(): boolean {
+    // Ensure unmuted and correct volume before the first attempt
+    this.customAudio.muted = false;
+    this.customAudio.volume = this.volume;
     this.isPlaying = true;
+    this.isMuted = false;
+    this.notify();
+
+    this.customAudio
+      .play()
+      .then(() => {
+        // ✅ Unmuted autoplay succeeded
+        this.isPlaying = true;
+        this.isMuted = false;
+        this.notify();
+      })
+      .catch((err: unknown) => {
+        // Only fall back to muted if the browser policy blocked us
+        const name = err instanceof Error ? err.name : '';
+        if (name !== 'NotAllowedError' && name !== 'AbortError') return;
+
+        if (!this.customAudio) return;
+
+        // Start muted so the audio is buffered
+        this.customAudio.muted = true;
+        this.isMuted = true;
+        this.notify();
+
+        this.customAudio.play().catch(() => {
+          // Still blocked — will activate on first gesture below
+        });
+
+        // Unmute on the very first passive gesture (no click required)
+        const activateAudio = () => {
+          if (!this.customAudio) return;
+          this.customAudio.muted = false;
+          this.customAudio.volume = this.volume;
+          this.isMuted = false;
+          this.isPlaying = true;
+          if (this.customAudio.paused) {
+            this.customAudio.play().catch(() => {});
+          }
+          this.notify();
+          cleanup();
+        };
+
+        const cleanup = () => {
+          window.removeEventListener('mousemove', activateAudio);
+          window.removeEventListener('pointermove', activateAudio);
+          window.removeEventListener('scroll', activateAudio);
+          window.removeEventListener('touchstart', activateAudio);
+          window.removeEventListener('click', activateAudio);
+          window.removeEventListener('keydown', activateAudio);
+        };
+
+        window.addEventListener('mousemove', activateAudio, { once: true, passive: true });
+        window.addEventListener('pointermove', activateAudio, { once: true, passive: true });
+        window.addEventListener('scroll', activateAudio, { once: true, passive: true });
+        window.addEventListener('touchstart', activateAudio, { once: true, passive: true });
+        window.addEventListener('click', activateAudio, { once: true, passive: true });
+        window.addEventListener('keydown', activateAudio, { once: true, passive: true });
+      });
+  }
+
+  private notify() {
+    const state = this.getState();
+    this.listeners.forEach((listener) => {
+      try {
+        listener(state);
+      } catch (err) {
+        console.error('Error in audio listener', err);
+      }
+    });
+  }
+
+  public play(trackId?: string): boolean {
+    this.init();
+
+    if (trackId && trackId !== this.currentTrack.id) {
+      const found = ISLAMIC_TRACKS.find((t) => t.id === trackId);
+      if (found) {
+        this.currentTrack = found;
+        this.setupAudioElement(found);
+      }
+    }
+
+    this.isPlaying = true;
+    this.isMuted = false;
+    this.notify();
 
     if (this.customAudio) {
-      this.customAudio.play().catch(() => {
-        // Fallback to Web Audio synthesis if mp3 fails
-        this.startSynthesizer();
-      });
-      return true;
-    } else {
-      this.startSynthesizer();
+      this.customAudio.muted = false;
+      this.customAudio.volume = this.volume;
+      const playPromise = this.customAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((e) => {
+          console.warn('Playback error:', e);
+        });
+      }
       return true;
     }
+    return false;
   }
 
   public pause() {
     this.isPlaying = false;
+    this.notify();
+
     if (this.customAudio) {
       this.customAudio.pause();
     }
-    if (this.timer) {
-      window.clearTimeout(this.timer);
-      this.timer = null;
-    }
-    if (this.audioCtx && this.audioCtx.state === 'running') {
-      this.audioCtx.suspend();
+  }
+
+  public togglePlay(): boolean {
+    if (this.isPlaying) {
+      this.pause();
+      return false;
+    } else {
+      this.play();
+      return true;
     }
   }
 
@@ -118,10 +237,34 @@ class AmbientSoundManager {
     if (this.customAudio) {
       this.customAudio.muted = this.isMuted;
     }
-    if (this.gainNode && this.audioCtx) {
-      this.gainNode.gain.setValueAtTime(this.isMuted ? 0 : 0.08, this.audioCtx.currentTime);
-    }
+    this.notify();
     return this.isMuted;
+  }
+
+  public setVolume(vol: number) {
+    this.volume = Math.max(0, Math.min(1, vol));
+    if (this.customAudio) {
+      this.customAudio.volume = this.volume;
+    }
+    this.notify();
+  }
+
+  public selectTrack(trackId: string) {
+    const track = ISLAMIC_TRACKS.find((t) => t.id === trackId);
+    if (!track) return;
+
+    this.currentTrack = track;
+    this.setupAudioElement(track);
+    this.play(track.id);
+  }
+
+  public getState(): AudioState {
+    return {
+      isPlaying: this.isPlaying,
+      isMuted: this.isMuted,
+      currentTrack: this.currentTrack,
+      volume: this.volume,
+    };
   }
 
   public getPlayingState(): boolean {
@@ -130,6 +273,18 @@ class AmbientSoundManager {
 
   public getMutedState(): boolean {
     return this.isMuted;
+  }
+
+  public getCurrentTrack(): IslamicTrack {
+    return this.currentTrack;
+  }
+
+  public subscribe(listener: AudioListener): () => void {
+    this.listeners.add(listener);
+    listener(this.getState());
+    return () => {
+      this.listeners.delete(listener);
+    };
   }
 }
 

@@ -44,7 +44,7 @@ export const IslamicBlessing: React.FC = () => {
 
             {/* Translation */}
             <blockquote className="font-playfair text-base sm:text-xl font-medium text-[#FFF8EB] tracking-wide max-w-xl mx-auto my-3 leading-relaxed">
-              &ldquo;{islamicTexts.blessingDuaEnglish}&rdquo;
+              {islamicTexts.blessingDuaEnglish}
             </blockquote>
 
             <span className="font-lato text-xs text-[#C5A15A] tracking-widest uppercase font-semibold block mt-1">
@@ -53,8 +53,26 @@ export const IslamicBlessing: React.FC = () => {
 
             <GoldDivider className="my-5 max-w-xs mx-auto" />
 
+            {/* Hazrat Ali Quote */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="max-w-xl mx-auto space-y-2 pt-1"
+            >
+              <blockquote className="font-playfair text-base sm:text-xl font-medium text-[#FFF8EB] tracking-wide max-w-xl mx-auto my-3 leading-relaxed">
+                Behtareen hamsafar woh hai jo tumhe Allah ke qareeb kar de.
+              </blockquote>
+              <span className="font-playfair text-[11px] sm:text-xs tracking-[0.2em] uppercase text-[#C5A15A] font-semibold block">
+                — Hazrat Ali ibn Abi Talib (R.A.)
+              </span>
+            </motion.div>
+
+            <GoldDivider className="my-5 max-w-xs mx-auto" />
+
             {/* Quranic Verse */}
-            <div className="space-y-1.5 max-w-xl mx-auto pt-1">
+            {/* <div className="space-y-1.5 max-w-xl mx-auto pt-1">
               <p className="font-amiri text-base sm:text-lg text-[#E7D4A4] leading-relaxed" dir="rtl">
                 {islamicTexts.quranicVerseArabic}
               </p>
@@ -64,7 +82,7 @@ export const IslamicBlessing: React.FC = () => {
               <span className="font-lato text-[11px] text-[#C5A15A] tracking-wider uppercase font-semibold block">
                 — {islamicTexts.quranicReference}
               </span>
-            </div>
+            </div> */}
           </div>
         </motion.div>
       </div>

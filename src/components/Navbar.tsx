@@ -23,23 +23,24 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   useEffect(() => {
     ambientSound.init();
+    const unsub = ambientSound.subscribe((state) => {
+      setIsPlayingMusic(state.isPlaying);
+      setIsMuted(state.isMuted);
+    });
 
     const handleScroll = () => {
       setScrolled(window.scrollY > 30);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      unsub();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const handleToggleMusic = () => {
-    if (!isPlayingMusic) {
-      ambientSound.play();
-      setIsPlayingMusic(true);
-    } else {
-      const mutedState = ambientSound.toggleMute();
-      setIsMuted(mutedState);
-    }
+    ambientSound.togglePlay();
   };
 
   const navLinks = [

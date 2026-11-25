@@ -25,6 +25,7 @@ export interface CoupleMember {
   arabicName: string;
   title: string;
   qualification: string;
+  designation?: string;
   description: string;
   imagePlaceholder: string;
 }
@@ -36,6 +37,7 @@ export const WEDDING_DATA = {
       arabicName: "محمد فيضان",
       title: "Groom",
       qualification: "MCA",
+      designation:"Software Engineer",
       description: "Son of Basheer Ahmed",
       imagePlaceholder: "/images/groom-placeholder.svg",
     } as CoupleMember,
@@ -44,6 +46,7 @@ export const WEDDING_DATA = {
       arabicName: "مسكان",
       title: "Bride",
       qualification: "M.Sc. Nursing",
+      designation:"Assistant Professor",
       description: "Daughter of Husain Saheb",
       imagePlaceholder: "/images/bride-placeholder.svg",
     } as CoupleMember,
@@ -126,6 +129,6 @@ export const WEDDING_DATA = {
     description: "You are cordially invited to celebrate the Nikah and Valima ceremony of Mohammad Faizan & Muskan on 8th & 9th January 2027 in Vijayapur, Karnataka.",
     keywords: ["Mohammad Faizan", "Muskan", "Islamic Wedding Invitation", "Nikah Ceremony", "Valima Reception", "Vijayapur Wedding", "Muslim Wedding Invitation"],
     themeColor: "#641C32",
-    ogImage: "/images/wedding-og-preview.png",
+    ogImage: "/images/og-wedding.png",
   },
 };

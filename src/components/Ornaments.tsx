@@ -289,9 +289,9 @@ export const IslamicPatternBg: React.FC<{
 export const DecorativePhotoPlaceholder: React.FC<{
   initials: string;
   arabicName: string;
-  name: string;
+  // name: string;
   role: string;
-}> = ({ initials, arabicName, name, role }) => {
+}> = ({ initials, arabicName, role }) => {
   return (
     <div className="relative aspect-[4/5] w-full rounded-t-[46%] rounded-b-xl overflow-hidden border-2 border-[#C5A15A] bg-gradient-to-b from-[#FFFDF9] via-[#F5EBD8] to-[#FFF8EB] p-4 flex flex-col items-center justify-between text-center shadow-inner group">
       {/* Corner Ornaments */}
@@ -338,9 +338,9 @@ export const DecorativePhotoPlaceholder: React.FC<{
 
       {/* Bottom Label Plate */}
       <div className="w-full pb-2">
-        <span className="font-playfair text-base sm:text-lg font-bold text-[#641C32] block">
+        {/* <span className="font-playfair text-base sm:text-lg font-bold text-[#641C32] block">
           {name}
-        </span>
+        </span> */}
       </div>
     </div>
   );

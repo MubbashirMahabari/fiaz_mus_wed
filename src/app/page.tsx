@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Navbar } from '@/components/Navbar';
 import { FloatingDecorations } from '@/components/FloatingDecorations';
@@ -17,12 +17,19 @@ import { ThankYouSection } from '@/components/ThankYouSection';
 import { ShareInvitationModal } from '@/components/ShareInvitation';
 import { MusicControl } from '@/components/MusicControl';
 import { BackToTop } from '@/components/BackToTop';
+import { ScrollHintOverlay } from '@/components/ScrollHintOverlay';
 import { GoldDivider } from '@/components/Ornaments';
+import { ambientSound } from '@/lib/audio';
 import confetti from 'canvas-confetti';
 
 export default function Home() {
   const [envelopeOpen, setEnvelopeOpen] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Automatically start Shukran Laka Rabbi without waiting for any click
+    ambientSound.init();
+  }, []);
 
   const handleShowerBlessings = () => {
     confetti({
@@ -128,6 +135,9 @@ export default function Home() {
 
       {/* Back to Top */}
       <BackToTop />
+
+      {/* Scroll Hint Overlay — fades out on first scroll */}
+      <ScrollHintOverlay />
     </div>
   );
 }

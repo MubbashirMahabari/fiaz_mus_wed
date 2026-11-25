@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { X, Sparkles, ChevronDown } from 'lucide-react';
 import { RoyalMonogramSeal, BismillahText, CornerFiligree, GoldDivider } from './Ornaments';
 import { WEDDING_DATA } from '@/lib/constants';
+import { ambientSound } from '@/lib/audio';
 import confetti from 'canvas-confetti';
 
 interface OpeningEnvelopeModalProps {
@@ -23,6 +24,7 @@ export const OpeningEnvelopeModal: React.FC<OpeningEnvelopeModalProps> = ({
 
   const handleOpenSeal = () => {
     setIsOpened(true);
+    ambientSound.play();
     confetti({
       particleCount: 50,
       spread: 70,
